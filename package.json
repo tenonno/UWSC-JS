@@ -1,0 +1,19 @@
+{
+  "name": "uwsc-js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tenonno/UWSC-JS.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tenonno/UWSC-JS/issues"
+  },
+  "homepage": "https://github.com/tenonno/UWSC-JS#readme"
+}
