@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node-dev converter.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/tenonno/UWSC-JS/issues"
   },
-  "homepage": "https://github.com/tenonno/UWSC-JS#readme"
+  "homepage": "https://github.com/tenonno/UWSC-JS#readme",
+  "devDependencies": {
+    "esprima": "^4.0.0",
+    "mz": "^2.6.0",
+    "node-dev": "^3.1.3"
+  }
 }
