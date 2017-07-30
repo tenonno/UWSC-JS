@@ -7,6 +7,8 @@ const process = {
         return `call ${uws.replace(/"/g, '')}`;
     }),
 
+    sleep: uwscFunc('sleep'),
+
     newThread: uwscFunc('thread', (func, ...args) => {
         return `thread ${func}(${args.join(', ')})`;
     })

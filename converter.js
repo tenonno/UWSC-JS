@@ -9,7 +9,7 @@ function uwscFunc(name) {
 }
 
 const process = require('./uwsc/process');
-const window = require('./uwsc/window');
+const { window, WindowStatus } = require('./uwsc/window');
 const screen = require('./uwsc/screen');
 const image = require('./uwsc/image');
 const { color, ColorType } = require('./uwsc/color');
@@ -19,8 +19,22 @@ const { input, Mouse } = require('./uwsc/input');
 const img = () => {}
 
 
-console.log.uwsc = { name: 'print' };
+console.log.uwsc = {
+    name: 'print',
+    parser: (data) => `print ${data}`
+};
 
+function varToStr(v) {
+
+    if (v.type === 'Literal') {
+        return v.raw;
+    } else if (v.type === 'Identifier') {
+        return v.name;
+    } else {
+        console.error('不明な Var です');
+    }
+
+}
 
 const converter = {};
 convert();
@@ -53,6 +67,8 @@ function parseFunctionUWSC(expression) {
             return parseFunctionUWSC(arg);
         } else if (arg.type === 'MemberExpression') {
             return eval(`${arg.object.name}.${arg.property.name}`);
+        } else if (arg.type === 'BinaryExpression') {
+            return `${varToStr(arg.left)} ${arg.operator} ${varToStr(arg.right)}`;
         } else {
             console.log('不明な引数です: ' + arg.type)
         }
@@ -155,12 +171,17 @@ async function convert() {
             const value = declarator.init.raw; //).replace(/'/g, '"');
 
             rvalue = value.replace(/'/g, '"');
-        }
-
-        if (declarator.init.type === 'CallExpression') {
+        } else if (declarator.init.type === 'CallExpression') {
 
             rvalue = parseFunctionUWSC(declarator.init);
 
+        } else if (declarator.init.type === 'BinaryExpression') {
+
+            rvalue = `${varToStr(declarator.init.left)} ${declarator.init.operator} ${varToStr(declarator.init.right)}`;
+
+        } else {
+            console.error('Var Error');
+            console.log(declarator);
         }
 
         const name = declarator.id.name;
@@ -193,8 +214,12 @@ async function convert() {
         if (data.test.type === 'CallExpression') {
 
             ex = parseFunctionUWSC(data.test);
+        } else if (data.test.type === 'BinaryExpression') {
+            ex = `${varToStr(data.test.left)} ${data.test.operator} ${varToStr(data.test.right)}`;
+        } else {
+            console.error('IF Error');
+            console.error(data);
         }
-
         return {
             begin: `if (${ex})\n`,
             end: 'endif\n'
@@ -273,6 +298,6 @@ async function convert() {
 
     }
 
-    fs.writeFile('script.usw', result);
+    fs.writeFile('script.uws', result);
 
 }
